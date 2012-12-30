@@ -1,0 +1,40 @@
+{
+  "name": "noderpt",
+  "description": "Node.js Report Utility",
+  "version": "0.0.1",
+  "author": {
+    "name": "Simon Su",
+    "email": "simonsu@mitac.com.tw"
+  },
+  "contributors": [
+    {
+      "name": "Simon Su",
+      "email": "simonsu@mitac.com.tw"
+    }
+  ],
+  "dependencies": {
+    "underscore": "*",
+    "xml2json": "*",
+    "nodeutil": "*",
+    "mysql": "*",
+    "express": "*",
+    "log4js": "*"
+  },
+  "keywords": [
+    "report"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peihsinsu/noderpt"
+  },
+  "main": "index",
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "optionalDependencies": {},
+  "_engineSupported": true,
+  "_npmVersion": "1.1.9",
+  "_nodeVersion": "v0.6.13",
+  "_defaultsLoaded": true,
+  "_from": "micloud"
+}
