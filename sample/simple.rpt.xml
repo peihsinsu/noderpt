@@ -1,0 +1,10 @@
+<config>
+  <name>queryUserInfo</name>
+  <sql>select * from user where 1=1</sql>
+  <conditions>
+    <field>USERNAME</field> <condition>and username = ?</condition>
+  </conditions>
+  <conditions>
+    <field>USER_ID</field> <condition>and user_id = ?</condition>
+  </conditions>
+</config>
