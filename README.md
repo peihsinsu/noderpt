@@ -51,11 +51,6 @@ Create the express project and edit the app.js file.
 
 Build the app.js for web start using express:
 ```js
-/*Configure the database connection*/
-process.env.DB_CFG_FILE='/root/project/report/lib/.database.cfg';
-/*Configure the report configure files*/
-process.env.RPT_CONFIG_PATH='/root/project/report/report/';
-
 var express = require('express')
   , routes = require('./routes')
   , http = require('http')
@@ -84,6 +79,8 @@ app.configure('development', function(){
 app.get('/', routes.index);
 
 rptRouter.setup(app, {
+    dbCfgFile: '/root/project/report/lib/.database.cfg', //Database connection info
+    rptConfigPath: '/root/project/report/report/', //report configure files
     reportRoot:'/report/rest',
     reportDoc: '/report/restdoc'
 });
@@ -97,10 +94,9 @@ The main block we need to add, only:
 ```js
 var rptRouter = require('noderpt').router;
 
-process.env.DB_CFG_FILE='/root/project/report/lib/.database.cfg';
-process.env.RPT_CONFIG_PATH='/root/project/report/report/';
-
 rptRouter.setup(app, {
+    dbCfgFile: '/root/project/report/lib/.database.cfg',
+    rptConfigPath: '/root/project/report/report/',
     reportRoot:'/report/rest',
     reportDoc: '/report/restdoc'
 });
