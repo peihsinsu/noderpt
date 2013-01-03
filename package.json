@@ -1,7 +1,7 @@
 {
   "name": "noderpt",
   "description": "Node.js Report Utility",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "author": {
     "name": "Simon Su",
     "email": "simonsu@mitac.com.tw"
@@ -14,7 +14,7 @@
   ],
   "dependencies": {
     "underscore": "*",
-    "xml2json": "*",
+    "xml2json": "=0.3.2",
     "nodeutil": "*",
     "mysql": "*",
     "express": "*",
