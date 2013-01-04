@@ -56,9 +56,16 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , log = require('nodeutil').logger.getInstance()
-  , rptRouter = require('noderpt').router;
-
+  , rpt = require('noderpt');
+  
 var app = express();
+
+rpt.setup(app, {
+  dbCfgFile: '/root/project/report/lib/.database.cfg',
+  rptConfigPath: '/root/project/report/report/',
+  reportRoot:'/report/rest',
+  reportDoc: '/report/restdoc'
+});
 
 app.configure(function(){
   app.set('port', process.env.PORT || 8080);
@@ -92,9 +99,8 @@ http.createServer(app).listen(app.get('port'), function(){
 ```
 The main block we need to add, only:
 ```js
-var rptRouter = require('noderpt').router;
-
-rptRouter.setup(app, {
+var rpt = require('noderpt');
+rpt.setup(app, {
     dbCfgFile: '/root/project/report/lib/.database.cfg',
     rptConfigPath: '/root/project/report/report/',
     reportRoot:'/report/rest',
