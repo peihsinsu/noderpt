@@ -1,0 +1,221 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Noderpt by peihsinsu</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/main.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+
+      <header>
+        <h1>Noderpt</h1>
+        <p></p>
+      </header>
+
+      <div id="banner">
+        <span id="logo"></span>
+
+        <a href="https://github.com/peihsinsu/noderpt" class="button fork"><strong>View On GitHub</strong></a>
+        <div class="downloads">
+          <span>Downloads:</span>
+          <ul>
+            <li><a href="https://github.com/peihsinsu/noderpt/zipball/master" class="button">ZIP</a></li>
+            <li><a href="https://github.com/peihsinsu/noderpt/tarball/master" class="button">TAR</a></li>
+          </ul>
+        </div>
+      </div><!-- end banner -->
+
+    <div class="wrapper">
+      <nav>
+        <ul></ul>
+      </nav>
+      <section>
+        <h1>Node Report Server (MySQL only now!)</h1>
+
+<p>Simple MySQL DB SQL to JSON mapping module, and also provide web function to render table.</p>
+
+<h1>Installation</h1>
+
+<div class="highlight"><pre>npm install noderpt
+</pre></div>
+
+<h1>Useage</h1>
+
+<p>Three steps to build the report...</p>
+
+<h2>Step1: Config the DB and SQL mapping file</h2>
+
+<p>The database config file's path need to export to environment and the config will like:</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">"host"</span><span class="p">:</span> <span class="s2">"database.ip.address"</span><span class="p">,</span>
+  <span class="nt">"port"</span><span class="p">:</span> <span class="mi">3306</span><span class="p">,</span>
+  <span class="nt">"user"</span><span class="p">:</span> <span class="s2">"dbuser"</span><span class="p">,</span>
+  <span class="nt">"password"</span><span class="p">:</span> <span class="s2">"dbpassword"</span><span class="p">,</span>
+  <span class="nt">"database"</span><span class="p">:</span> <span class="s2">"dbname"</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>You need to create a config file inside your project, in our sample we create the report config in $project/report.</p>
+
+<p>You can use json format config</p>
+
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="nt">"name"</span><span class="p">:</span> <span class="s2">"queryUserInfo"</span><span class="p">,</span>
+  <span class="nt">"sql"</span> <span class="p">:</span> <span class="s2">"select * from user where 1=1 "</span><span class="p">,</span>
+  <span class="nt">"conditions"</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span><span class="nt">"field"</span><span class="p">:</span><span class="s2">"USERNAME"</span><span class="p">,</span> <span class="nt">"condition"</span><span class="p">:</span><span class="s2">"and username = ?"</span><span class="p">},</span>
+    <span class="p">{</span><span class="nt">"field"</span><span class="p">:</span><span class="s2">"USER_ID"</span><span class="p">,</span> <span class="nt">"condition"</span><span class="p">:</span><span class="s2">"and user_id = ?"</span><span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+<p>Or using xml format config</p>
+
+<div class="highlight"><pre><span class="nt">&lt;config&gt;</span>
+  <span class="nt">&lt;name&gt;</span>queryUserInfo<span class="nt">&lt;/name&gt;</span>
+  <span class="nt">&lt;sql&gt;</span>select * from user where 1=1<span class="nt">&lt;/sql&gt;</span>
+  <span class="nt">&lt;conditions&gt;</span>
+    <span class="nt">&lt;field&gt;</span>USERNAME<span class="nt">&lt;/field&gt;</span> <span class="nt">&lt;condition&gt;</span>and username = ?<span class="nt">&lt;/condition&gt;</span>
+  <span class="nt">&lt;/conditions&gt;</span>
+  <span class="nt">&lt;conditions&gt;</span>
+    <span class="nt">&lt;field&gt;</span>USER_ID<span class="nt">&lt;/field&gt;</span> <span class="nt">&lt;condition&gt;</span>and user_id = ?<span class="nt">&lt;/condition&gt;</span>
+  <span class="nt">&lt;/conditions&gt;</span>
+<span class="nt">&lt;/config&gt;</span>
+</pre></div>
+
+<h2>Step2: Load report router in app.js</h2>
+
+<p>Create the express project and edit the app.js file.</p>
+
+<p>Build the app.js for web start using express:</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'express'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">routes</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'./routes'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'http'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'path'</span><span class="p">)</span>
+  <span class="p">,</span> <span class="nx">log</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'nodeutil'</span><span class="p">).</span><span class="nx">logger</span><span class="p">.</span><span class="nx">getInstance</span><span class="p">()</span>
+  <span class="p">,</span> <span class="nx">rpt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'noderpt'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+
+<span class="nx">rpt</span><span class="p">.</span><span class="nx">setup</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="p">{</span>
+  <span class="nx">dbCfgFile</span><span class="o">:</span> <span class="s1">'/root/project/report/lib/.database.cfg'</span><span class="p">,</span>
+  <span class="nx">rptConfigPath</span><span class="o">:</span> <span class="s1">'/root/project/report/report/'</span><span class="p">,</span>
+  <span class="nx">reportRoot</span><span class="o">:</span><span class="s1">'/report/rest'</span><span class="p">,</span>
+  <span class="nx">reportDoc</span><span class="o">:</span> <span class="s1">'/report/restdoc'</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">configure</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'port'</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mi">8080</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'views'</span><span class="p">,</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">'/views'</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">'view engine'</span><span class="p">,</span> <span class="s1">'jade'</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">favicon</span><span class="p">());</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">logger</span><span class="p">(</span><span class="s1">'dev'</span><span class="p">));</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">bodyParser</span><span class="p">());</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">methodOverride</span><span class="p">());</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">);</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kr">static</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">'public'</span><span class="p">)));</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">configure</span><span class="p">(</span><span class="s1">'development'</span><span class="p">,</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">errorHandler</span><span class="p">());</span>
+<span class="p">});</span>
+
+<span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'/'</span><span class="p">,</span> <span class="nx">routes</span><span class="p">.</span><span class="nx">index</span><span class="p">);</span>
+
+<span class="nx">rptRouter</span><span class="p">.</span><span class="nx">setup</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">dbCfgFile</span><span class="o">:</span> <span class="s1">'/root/project/report/lib/.database.cfg'</span><span class="p">,</span> <span class="c1">//Database connection info</span>
+    <span class="nx">rptConfigPath</span><span class="o">:</span> <span class="s1">'/root/project/report/report/'</span><span class="p">,</span> <span class="c1">//report configure files</span>
+    <span class="nx">reportRoot</span><span class="o">:</span><span class="s1">'/report/rest'</span><span class="p">,</span>
+    <span class="nx">reportDoc</span><span class="o">:</span> <span class="s1">'/report/restdoc'</span>
+<span class="p">});</span>
+
+
+<span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'port'</span><span class="p">),</span> <span class="kd">function</span><span class="p">(){</span>
+  <span class="nx">log</span><span class="p">.</span><span class="nx">debug</span><span class="p">(</span><span class="s2">"Express server listening on port "</span> <span class="o">+</span> <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">'port'</span><span class="p">));</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>The main block we need to add, only:</p>
+
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">rpt</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'noderpt'</span><span class="p">);</span>
+<span class="nx">rpt</span><span class="p">.</span><span class="nx">setup</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">dbCfgFile</span><span class="o">:</span> <span class="s1">'/root/project/report/lib/.database.cfg'</span><span class="p">,</span>
+    <span class="nx">rptConfigPath</span><span class="o">:</span> <span class="s1">'/root/project/report/report/'</span><span class="p">,</span>
+    <span class="nx">reportRoot</span><span class="o">:</span><span class="s1">'/report/rest'</span><span class="p">,</span>
+    <span class="nx">reportDoc</span><span class="o">:</span> <span class="s1">'/report/restdoc'</span>
+<span class="p">});</span>
+</pre></div>
+
+<p>The rptRouter.setup help for setup the REST route url prefix (/report/rest) and the document page route (/report/restdoc).</p>
+
+<h2>Step3: Using report.js to render in the html page</h2>
+
+<p>We create a test.html in the $project/public folder, that is the default folder for express static resource. 
+And in our sample, your need to download the jquery.js for build the page
+Edit the html page:</p>
+
+<div class="highlight"><pre><span class="nt">&lt;html&gt;</span>
+<span class="nt">&lt;head&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">language=</span><span class="s">"javascript"</span> <span class="na">src=</span><span class="s">"/javascripts/jquery.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">language=</span><span class="s">"javascript"</span> <span class="na">src=</span><span class="s">"/report.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">language=</span><span class="s">"javascript"</span> <span class="na">src=</span><span class="s">"/underscore-min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+<span class="nt">&lt;script </span><span class="na">type=</span><span class="s">"text/javascript"</span> <span class="na">language=</span><span class="s">"javascript"</span> <span class="na">src=</span><span class="s">"/json-to-table.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+
+<span class="nt">&lt;script&gt;</span>
+<span class="nx">$</span><span class="p">(</span><span class="nb">document</span><span class="p">).</span><span class="nx">ready</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">$</span><span class="p">(</span><span class="s1">'#data'</span><span class="p">).</span><span class="nx">genReport</span><span class="p">(</span>
+    <span class="s1">'/report/rest'</span><span class="p">,</span>
+    <span class="s1">'simple.rpt.xml'</span><span class="p">,</span> 
+    <span class="p">{</span><span class="s2">"USERNAME"</span><span class="o">:</span><span class="s2">"SIMONSU"</span><span class="p">},</span>
+    <span class="p">[</span><span class="s2">"USERNAME"</span><span class="p">,</span><span class="s2">"USER_ID"</span><span class="p">]);</span>
+<span class="p">}</span> <span class="p">);</span>
+<span class="nt">&lt;/script&gt;</span>
+<span class="nt">&lt;/head&gt;</span>
+
+<span class="nt">&lt;body&gt;</span>
+<span class="nt">&lt;h1&gt;</span>TEST REPORT<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"data"</span><span class="nt">&gt;</span> <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+<h2>Start the server</h2>
+
+<div class="highlight"><pre><span class="c"># cd $project</span>
+<span class="c"># node app.js</span>
+</pre></div>
+
+<p>If the three steps are all OK, you can load report using REST:</p>
+
+<p>http://localhost:8080/report/rest/[Report Config File Name]?[queryKey=queryValue]</p>
+
+<div class="highlight"><pre>ex: http://localhost:8080/report/rest/simple.rpt?USER_ID=6666
+</pre></div>
+
+<p>PS: the path need to follow the configure in the app.js</p>
+
+<p>And the test page will be:</p>
+
+<div class="highlight"><pre>http://localhost:8080/test.html
+</pre></div>
+      </section>
+      <footer>
+        <p>Project maintained by <a href="https://github.com/peihsinsu">peihsinsu</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
