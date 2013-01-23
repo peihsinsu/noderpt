@@ -1,7 +1,7 @@
 {
   "name": "noderpt",
   "description": "Node.js Report Utility",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": {
     "name": "Simon Su",
     "email": "simonsu@mitac.com.tw"
