@@ -85,14 +85,6 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 
-rptRouter.setup(app, {
-    dbCfgFile: '/root/project/report/lib/.database.cfg', //Database connection info
-    rptConfigPath: '/root/project/report/report/', //report configure files
-    reportRoot:'/report/rest',
-    reportDoc: '/report/restdoc'
-});
-
-
 http.createServer(app).listen(app.get('port'), function(){
   log.debug("Express server listening on port " + app.get('port'));
 });
