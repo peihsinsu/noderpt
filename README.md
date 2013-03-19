@@ -81,4 +81,6 @@ After run the test.js, you will get a query result of the configure file as a js
 
 # Other Documents
 
-* [Form mashalling script](https://github.com/peihsinsu/noderpt/blob/master/doc/formMarshalling.md)
+* [ExpressJS web support configure](./doc/reportConfigure.md)
+* [Form mashalling script](./doc/formMarshalling.md)
+
