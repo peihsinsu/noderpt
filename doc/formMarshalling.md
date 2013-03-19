@@ -1,4 +1,5 @@
-h2. Form Marshalling Script
+Form Marshalling Script
+=======
 
 If you building HTML page that need to setup a query result to a form that the fields mapping to the result object. You can use the following way to easily load the result to a form.
 
