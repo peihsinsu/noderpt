@@ -1,12 +1,11 @@
 var rpt = require('./lib')
-  , json2table = require('nodeutil').json2table;
+  , json2table = require('nodeutil').json2table
+  , mailer = require('nodeutil').mailutil;
 
 rpt.setup(null, 
   {
-    dbCfgFile: '/root/project/report/lib/.database.cfg',
-    rptConfigPath: '/root/project/report/report/',
-    reportRoot:'/report/rest',
-    reportDoc: '/report/restdoc'
+    dbCfgFile: '/root/project/report/lib/.database.cfg', //Where the database config file exist
+    rptConfigPath: '/root/project/report/report/' //Where the simple.rpt.xml exist
   }
 );
 
@@ -16,7 +15,7 @@ rpt.getRptFromConfig('simple.rpt.xml', false, function(d){
   /* You can use it as html table output */
   //console.log(json2table.ConvertJsonToTable(d));
   /* Or use for a mail notice report */
-  sendMail('your_mail@xxx.com', 
+  sendMail('receiver_mail@gmail.com', 
     'Dear Receiver: <br/><br/> The report is here: <br/>' + json2table.ConvertJsonToTable(d) + '<br/><br/> Send from noderpt');
 });
 
@@ -25,7 +24,7 @@ function sendMail(receiver, content){
   mailer.init(
     {"smtpOptions":
       {"service":"Gmail", 
-        "auth": {"user": "your-account","pass": "your-password"}}, 
+        "auth": {"user": "your_name","pass": "your_password"}}, 
         "sender": "NO-REPLY <no-reply@micloud.tw>"}
   );
 
