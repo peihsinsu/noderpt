@@ -1,7 +1,7 @@
 {
   "name": "noderpt",
   "description": "Node.js Report Utility",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "author": {
     "name": "Simon Su",
     "email": "simonsu@mitac.com.tw"
@@ -17,7 +17,8 @@
     "nodeutil": "*",
     "mysql": "*",
     "express": "*",
-    "log4js": "*"
+    "log4js": "*",
+    "node-expat": "~2.3.3"
   },
   "keywords": [
     "report"
